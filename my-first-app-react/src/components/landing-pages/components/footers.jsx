@@ -25,8 +25,7 @@ const SocialMediaLinks = ({ links, iconSize = "1.5rem", className = "" }) => {
     <div className={`d-flex gap-3 ${className}`}> 
       {links.map((link, index) => ( 
         <a key={index} href={link.url} className="text-dark" aria-label={link.label}> 
-          <i className={`bi bi-${link.icon}`} style={{ fontSize: iconSize 
-}}></i> 
+          <i className={`bi bi-${link.icon}`} style={{ fontSize: iconSize }}></i> 
         </a> 
       ))} 
     </div> 
