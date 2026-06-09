@@ -3,7 +3,7 @@ const CardCalculates = ({ title, value, icon }) => {
   return (
     <Cards>
       <Cards.Body>
-        <div className="d-flex justify-content-between alignitems-center">
+        <div className="d-flex justify-content-between align-items-center">
           <div>
             <p
               className="text-muted mb-1 small"
