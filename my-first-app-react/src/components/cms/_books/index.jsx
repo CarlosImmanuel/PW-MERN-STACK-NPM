@@ -4,12 +4,14 @@ import React, { useState } from "react";
 import { ListBooks } from "@/const/booklist";
 import { CardCalculates } from "../components/card_calculates";
 import { Header } from "./components/header";
+import { openModal } from "../../ui/modals";
+import Form from "./components/form";
 import Tabledata from "./components/tabledata";
 export function MBooks() {
   const [books, setBooks] = useState(ListBooks);
   return (
     <div className="container-fluid">
-      <Header handleAdd={() => alert("add new book")} />
+      <Header handleAdd={() => openModal({ message: <Form />, size: "xl"})} />
       <div className="row">
         <div className="col-md-3">
           <CardCalculates
