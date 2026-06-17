@@ -15,6 +15,9 @@ app.use(express.urlencoded({ extended: true }));
 
 const bookRoutes = require("./routes/bookRoutes");
 app.use("/api/books", bookRoutes);
+
+const userRoutes = require("./routes/userRoutes");
+app.use("/api/users", userRoutes);
  
 // Test database connection 
 db.sequelize.authenticate() 
