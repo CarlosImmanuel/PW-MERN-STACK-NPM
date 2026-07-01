@@ -2,6 +2,7 @@ const db = require("../models");
 const User = db.User;
 const { Op } = db.Sequelize;
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // Get all users
 exports.getAllUsers = async (req, res) => {
@@ -345,3 +346,66 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    } // Find user by email
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    // Check if user is active
+    if (!user.is_active) {
+      return res.status(403).json({
+        success: false,
+        message: "Account is inactive. Please contact administrator",
+      });
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
+    }
+
+    const userResponse = {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+    };
+
+    const expirationTime = Math.floor(Date.now() / 1000) + 6 * 60 * 60;
+    const accessToken = jwt.sign(userResponse, process.env.JWT_SECRET, {
+      expiresIn: "6h",
+    });
+
+    res.json({
+      success: true,
+      message: "Login successful",
+      data: userResponse,
+      accessToken,
+      expiresIn: expirationTime,
+    });
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to login",
+      error: error.message,
+    });
+  }
+};
